@@ -1,2 +1,2 @@
-#data spring example app
+#dataspringexampleapp
 first readme created
