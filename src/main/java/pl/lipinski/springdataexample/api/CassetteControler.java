@@ -1,10 +1,12 @@
 package pl.lipinski.springdataexample.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.lipinski.springdataexample.dao.entity.Cassette;
 import pl.lipinski.springdataexample.manager.CassetteManager;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -28,14 +30,26 @@ public class CassetteControler {
         return cassetteManager.findById(id);
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public Cassette save(@RequestBody Cassette cassette){
         return cassetteManager.save(cassette);
     }
 
-    @PutMapping
+    @PutMapping()
     public Cassette update(@RequestBody Cassette cassette){
         return cassetteManager.save(cassette);
+    }
+
+    @PatchMapping("/update")
+    public ResponseEntity<Cassette> updateById(@RequestParam Long id){
+        Cassette cassette = cassetteManager.findById(id).get();
+        if(cassette.getRented()){
+            cassette.setRented(false);
+        } else{
+            cassette.setRented(true);
+        }
+        final Cassette updatedCassette = cassetteManager.save(cassette);
+        return ResponseEntity.ok(updatedCassette);
     }
 
     @DeleteMapping

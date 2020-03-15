@@ -38,8 +38,9 @@ public class CassetteManager {
 
     @EventListener(ApplicationReadyEvent.class)
     public void dbFiller(){
-        save(new Cassette(1L, "Titanic", LocalDate.of(1999, 9, 20)));
-        save(new Cassette(2L, "Titanic 2: Eletric Boogaloo", LocalDate.of(2001, 1, 21)));
-        save(new Cassette(3L, "Titanic 3: Eletric Boogaloo - return of la chupakabra", LocalDate.of(2003, 7, 4)));
+        save(new Cassette(1L, "Titanic", LocalDate.of(1999, 9, 20), false));
+        save(new Cassette(2L, "Titanic 2: Eletric Boogaloo", LocalDate.of(2001, 1, 21), false));
+        save(new Cassette(3L, "Titanic 3: Eletric Boogaloo - return of la chupakabra",
+                LocalDate.of(2003, 7, 4), false));
     }
 }

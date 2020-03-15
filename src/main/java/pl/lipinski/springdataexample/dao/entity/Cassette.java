@@ -1,9 +1,6 @@
 package pl.lipinski.springdataexample.dao.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
@@ -16,6 +13,16 @@ public class Cassette {
     private String name;
 
     private LocalDate productionYear;
+
+    private Boolean isRented;
+
+    public Boolean getRented() {
+        return isRented;
+    }
+
+    public void setRented(Boolean rented) {
+        isRented = rented;
+    }
 
     public Long getId() {
         return id;
@@ -44,9 +51,10 @@ public class Cassette {
     public Cassette() {
     }
 
-    public Cassette(Long id, String name, LocalDate productionYear) {
+    public Cassette(Long id, String name, LocalDate productionYear, Boolean isRented) {
         this.id = id;
         this.name = name;
         this.productionYear = productionYear;
+        this.isRented = isRented;
     }
 }
