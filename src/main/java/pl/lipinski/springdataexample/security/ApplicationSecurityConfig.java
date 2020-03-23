@@ -11,7 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
-import pl.lipinski.springdataexample.auth.ApplicationUserService;
+import pl.lipinski.springdataexample.auth.*;
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +35,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         firewall.setAllowUrlEncodedPercent(true);
         firewall.setAllowUrlEncodedPeriod(true);
         firewall.setAllowUrlEncodedSlash(true);
-        //firewall.setAllowedHttpMethods(Collection"%");
         return firewall;
     }
 
@@ -52,10 +51,9 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/cassettes/getall/cassette").permitAll()
-                .antMatchers("/api/cassettes/getbyid/cassette").hasRole("ADMIN")
-                .anyRequest()
-                .authenticated()
+                .antMatchers("/api/users/add").permitAll()
+                .antMatchers("/api/users/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
                 .and()
                 .httpBasic();
     }

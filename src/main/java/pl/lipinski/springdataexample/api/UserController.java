@@ -1,6 +1,7 @@
 package pl.lipinski.springdataexample.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import pl.lipinski.springdataexample.dao.UserRepo;
 import pl.lipinski.springdataexample.dao.entity.Cassette;
@@ -14,9 +15,11 @@ import java.util.Optional;
 public class UserController {
 
     UserManager userManager;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserManager userManager) {
+    public UserController(UserManager userManager, PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
         this.userManager = userManager;
     }
 
@@ -37,9 +40,8 @@ public class UserController {
 
     @PostMapping("/add")
     public User save(@RequestBody User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userManager.save(user);
     }
-
-
 
 }

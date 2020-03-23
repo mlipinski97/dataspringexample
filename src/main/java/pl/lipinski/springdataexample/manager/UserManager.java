@@ -49,6 +49,6 @@ public class UserManager {
     @EventListener(ApplicationReadyEvent.class)
     public void dbFiller(){
         save(new User("admin", passwordEncoder.encode("admin"), true, "ROLE_ADMIN"));
-        save(new User("admin2", passwordEncoder.encode("admin"), true, "ADMIN"));
+        save(new User("user", passwordEncoder.encode("user"), true, "ROLE_USER"));
     }
 }

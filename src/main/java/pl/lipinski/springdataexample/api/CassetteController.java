@@ -5,10 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.lipinski.springdataexample.dao.entity.Cassette;
 import pl.lipinski.springdataexample.dao.entity.RentBasket;
+import pl.lipinski.springdataexample.exceptions.WrongCassetteStatusException;
 import pl.lipinski.springdataexample.manager.CassetteManager;
 import pl.lipinski.springdataexample.manager.RentBasketManager;
 
-import java.util.NoSuchElementException;
+import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @RestController
@@ -34,6 +36,16 @@ public class CassetteController {
         return cassetteManager.findById(id);
     }
 
+    @GetMapping("/getbyname/cassette")
+    public Optional<Cassette> getById(@RequestParam String name){
+        return cassetteManager.findByName(name);
+    }
+
+    @GetMapping("/getbyproductionyear/cassette")
+    public Optional<Cassette> getById(@RequestParam LocalDate producetionDate){
+        return cassetteManager.findByProductionYear(producetionDate);
+    }
+
     @PostMapping("/add/cassette")
     public Cassette save(@RequestBody Cassette cassette){
         return cassetteManager.save(cassette);
@@ -44,19 +56,32 @@ public class CassetteController {
         return cassetteManager.save(cassette);
     }
 
-    //TODO split update rent status to "rent" and "return"
-    @PatchMapping("/update/cassette")
-    public ResponseEntity<Cassette> updateById(@RequestParam Long id, @RequestParam Long basketId){
-        Cassette cassette = cassetteManager.findById(id).get();
-        RentBasket rentBasket = rentBasketManager.findById(basketId).get();
-        if(cassette.getRented()){
-            cassette.setRented(false);
-            cassette.setCurrentBasket(null);
+    @PatchMapping("/rentbyid")
+    public ResponseEntity<Cassette> rentCassetteById(@RequestParam Long id, @RequestParam Long basketid){
+        Optional<Cassette> cassette = cassetteManager.findById(id);
+        cassette.orElseThrow(EntityNotFoundException::new);
+        Optional<RentBasket> rentBasket = rentBasketManager.findById(basketid);
+        rentBasket.orElseThrow(EntityNotFoundException::new);
+        if(cassette.get().getRented()){
+            throw new WrongCassetteStatusException("Cassette with id: " + id + " already rented!");
         } else{
-            cassette.setCurrentBasket(rentBasket);
-            cassette.setRented(true);
+            cassette.get().setRented(true);
+            cassette.get().setCurrentBasket(rentBasket.get());
         }
-        final Cassette updatedCassette = cassetteManager.save(cassette);
+        final Cassette updatedCassette = cassetteManager.save(cassette.get());
+        return ResponseEntity.ok(updatedCassette);
+    }
+    @PatchMapping("/returnbyid")
+    public ResponseEntity<Cassette> returnCassetteById(@RequestParam Long id){
+        Optional<Cassette> cassette = cassetteManager.findById(id);
+        cassette.orElseThrow(EntityNotFoundException::new);
+        if(!cassette.get().getRented()){
+            throw new WrongCassetteStatusException("Cassette with id: " + id + " is not rented!");
+        } else{
+            cassette.get().setRented(false);
+            cassette.get().setCurrentBasket(null);
+        }
+        final Cassette updatedCassette = cassetteManager.save(cassette.get());
         return ResponseEntity.ok(updatedCassette);
     }
 

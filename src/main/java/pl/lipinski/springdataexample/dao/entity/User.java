@@ -16,7 +16,8 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @JsonIgnore
+    /*@JsonIgnore*/
+    //TODO: learn about DTO, shouldnt send password by JSON, learn aabout form base data
     @Column(nullable = false)
     private String password;
 
@@ -35,6 +36,7 @@ public class User {
         this.isEnabled = isEnabled;
         this.roles = roles;
     }
+
 
     public Long getId() {
         return id;

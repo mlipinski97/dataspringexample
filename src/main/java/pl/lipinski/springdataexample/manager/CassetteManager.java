@@ -24,6 +24,15 @@ public class CassetteManager {
         return cassetteRepo.findById(id);
     }
 
+    public Optional<Cassette> findByName(String name){
+        return cassetteRepo.findByName(name);
+    }
+
+    public Optional<Cassette> findByProductionYear(LocalDate productionYear){
+        return cassetteRepo.findByProductionYear(productionYear);
+    }
+
+
     public Iterable<Cassette> findAll(){
        return cassetteRepo.findAll();
     }
