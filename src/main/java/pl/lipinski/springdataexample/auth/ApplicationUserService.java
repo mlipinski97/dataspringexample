@@ -5,21 +5,25 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import pl.lipinski.springdataexample.dao.UserRepo;
+import pl.lipinski.springdataexample.dao.entity.User;
+
+import java.util.Optional;
 
 @Service
 public class ApplicationUserService implements UserDetailsService {
 
-    private final ApplicationUserDao applicationUserDao;
+    UserRepo userRepo;
 
     @Autowired
-    public ApplicationUserService(ApplicationUserDao applicationUserDao) {
-        this.applicationUserDao = applicationUserDao;
+    public ApplicationUserService(UserRepo userRepo) {
+        this.userRepo = userRepo;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return applicationUserDao.selectApplicationUserByUsername(username)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException(String.format("Username %s not found", username)));
+        Optional<User> user = userRepo.findByUsername(username);
+        user.orElseThrow(() -> new UsernameNotFoundException(username + " not found!"));
+        return user.map(ApplicationUser::new).get();
     }
 }

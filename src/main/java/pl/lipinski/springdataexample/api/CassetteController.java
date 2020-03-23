@@ -13,13 +13,13 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/cassettes")
-public class CassetteControler {
+public class CassetteController {
 
     private CassetteManager cassetteManager;
     private RentBasketManager rentBasketManager;
 
     @Autowired
-    public CassetteControler(CassetteManager cassetteManager, RentBasketManager rentBasketManager) {
+    public CassetteController(CassetteManager cassetteManager, RentBasketManager rentBasketManager) {
         this.rentBasketManager = rentBasketManager;
         this.cassetteManager = cassetteManager;
     }
