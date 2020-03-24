@@ -18,11 +18,11 @@ public class UserManager {
 
     UserRepo userRepo;
 
-    @Autowired
     PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserManager(UserRepo userRepo) {
+    public UserManager(UserRepo userRepo,  PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
     }
 
@@ -35,6 +35,9 @@ public class UserManager {
     }
 
     public User save(User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles("USER");
+        user.setEnabled(true);
         return userRepo.save(user);
     }
 
@@ -48,7 +51,7 @@ public class UserManager {
 
     @EventListener(ApplicationReadyEvent.class)
     public void dbFiller(){
-        save(new User("admin", passwordEncoder.encode("admin"), true, "ROLE_ADMIN"));
-        save(new User("user", passwordEncoder.encode("user"), true, "ROLE_USER"));
+        userRepo.save(new User("admin", passwordEncoder.encode("admin"), true, "ROLE_ADMIN"));
+        userRepo.save(new User("user", passwordEncoder.encode("user"), true, "ROLE_USER"));
     }
 }

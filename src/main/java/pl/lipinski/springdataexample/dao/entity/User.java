@@ -16,10 +16,13 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
-    /*@JsonIgnore*/
-    //TODO: learn about DTO, shouldnt send password by JSON, learn aabout form base data
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
+
+    @JsonIgnore
+    @Transient
+    private String passwordConfirm;
 
     @NotNull
     private boolean isEnabled;
@@ -37,6 +40,13 @@ public class User {
         this.roles = roles;
     }
 
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
+    }
 
     public Long getId() {
         return id;

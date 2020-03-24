@@ -20,6 +20,7 @@ public class Cassette {
 
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "current_basket_id")
     private RentBasket currentBasket;
 

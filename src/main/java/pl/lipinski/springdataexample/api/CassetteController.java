@@ -1,8 +1,10 @@
 package pl.lipinski.springdataexample.api;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.lipinski.springdataexample.dao.dto.RentBasketDto;
 import pl.lipinski.springdataexample.dao.entity.Cassette;
 import pl.lipinski.springdataexample.dao.entity.RentBasket;
 import pl.lipinski.springdataexample.exceptions.WrongCassetteStatusException;
@@ -19,11 +21,13 @@ public class CassetteController {
 
     private CassetteManager cassetteManager;
     private RentBasketManager rentBasketManager;
+    protected final ModelMapper modelMapper;
 
     @Autowired
     public CassetteController(CassetteManager cassetteManager, RentBasketManager rentBasketManager) {
         this.rentBasketManager = rentBasketManager;
         this.cassetteManager = cassetteManager;
+        this.modelMapper = new ModelMapper();
     }
 
     @GetMapping("/getall/cassette")
@@ -71,6 +75,7 @@ public class CassetteController {
         final Cassette updatedCassette = cassetteManager.save(cassette.get());
         return ResponseEntity.ok(updatedCassette);
     }
+
     @PatchMapping("/returnbyid")
     public ResponseEntity<Cassette> returnCassetteById(@RequestParam Long id){
         Optional<Cassette> cassette = cassetteManager.findById(id);
@@ -91,13 +96,22 @@ public class CassetteController {
     }
 
     @PostMapping("/add/basket")
-    public RentBasket saveBasket(@RequestBody RentBasket rentBasket){
-        return rentBasketManager.save(rentBasket);
+    public ResponseEntity<RentBasketDto> saveBasket(@ModelAttribute("newbasketform") RentBasketDto rentBasketDto){
+        rentBasketManager.save(modelMapper.map(rentBasketDto, RentBasket.class));
+        rentBasketDto.setRentDate(LocalDate.now());
+        return ResponseEntity.ok(rentBasketDto);
     }
 
     @DeleteMapping("/delete/basket")
     public void deleteBasketById(@RequestParam Long id){
         rentBasketManager.deleteById(id);
+    }
+
+    @GetMapping("/getbyid/basket")
+    public RentBasketDto getBasketById(@RequestParam Long id){
+        Optional<RentBasket> rentBasket = rentBasketManager.findById(id);
+        rentBasket.orElseThrow(EntityNotFoundException::new);
+        return modelMapper.map(rentBasket.get(), RentBasketDto.class);
     }
 
 }

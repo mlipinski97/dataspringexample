@@ -38,6 +38,7 @@ public class CassetteManager {
     }
 
     public Cassette save(Cassette cassette){
+        cassette.setCurrentBasket(null);
         return cassetteRepo.save(cassette);
     }
 
