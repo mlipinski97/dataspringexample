@@ -36,7 +36,7 @@ public class UserManager {
 
     public User save(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles("USER");
+        user.setRoles("ROLE_USER");
         user.setEnabled(true);
         return userRepo.save(user);
     }

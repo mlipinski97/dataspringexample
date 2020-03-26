@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.lipinski.springdataexample.dao.dto.RentBasketDto;
 import pl.lipinski.springdataexample.dao.entity.Cassette;
 import pl.lipinski.springdataexample.dao.entity.RentBasket;
-import pl.lipinski.springdataexample.exceptions.WrongCassetteStatusException;
+import pl.lipinski.springdataexample.util.exceptions.WrongCassetteStatusException;
 import pl.lipinski.springdataexample.manager.CassetteManager;
 import pl.lipinski.springdataexample.manager.RentBasketManager;
 
