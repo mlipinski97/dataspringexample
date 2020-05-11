@@ -1,1 +1,1 @@
-#DATASPRING EXAMPLE
+Simple CRUD spring project
